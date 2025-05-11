@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elegant PWA Browser</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      background: linear-gradient(135deg, #1f1c2c, #928DAB);
+      color: white;
+      min-height: 100vh;
+      text-align: center;
+    }
+    .container {
+      margin-top: 100px;
+    }
+    h1 {
+      font-size: 2em;
+    }
+    input[type="text"] {
+      padding: 15px;
+      width: 60%;
+      border-radius: 30px;
+      border: none;
+      font-size: 1em;
+      outline: none;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 25px;
+      background-color: #fff;
+      color: #1f1c2c;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+    #installBtn {
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>My Elegant PWA Browser</h1>
+    <form id="redirectForm">
+      <input type="text" id="urlInput" placeholder="Enter URL e.g. https://example.com" required>
+      <br>
+      <button type="submit">Go</button>
+    </form>
+    <button id="installBtn">Install App</button>
+  </div>
+
+  <script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          installBtn.style.display = 'none';
+        });
+      }
+    });
+
+    document.getElementById('redirectForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      let url = document.getElementById('urlInput').value.trim();
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+      window.location.href = url;
+    });
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker Registered'));
+    }
+  </script>
+</body>
+</html>

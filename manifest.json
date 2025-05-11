@@ -1,0 +1,16 @@
+
+{
+  "name": "Elegant PWA Browser",
+  "short_name": "PWA Browser",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1f1c2c",
+  "theme_color": "#928DAB",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
